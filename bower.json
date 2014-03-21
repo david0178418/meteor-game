@@ -1,0 +1,24 @@
+{
+  "name": "JS App Boilerplate",
+  "version": "0.0.0",
+  "homepage": "https://github.com/david0178418/simple-js-amd-app-boilerplate",
+  "authors": [
+    "David Granado <davidjgranado@gmail.com>"
+  ],
+  "description": "Simple js app boilerplate",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "requirejs": "latest",
+    "lodash": "latest"
+  }
+}
