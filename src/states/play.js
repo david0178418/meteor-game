@@ -13,8 +13,8 @@ define(function(require) {
 			Hero.preload(game);
 		},
 		create: function(game) {
-			game.add.tileSprite(0, 0, 2000, 2000, 'background');
-			game.world.setBounds(0, 0, 1400, 1400);
+			game.add.tileSprite(0, 0, 1100, 1100, 'background');
+			game.world.setBounds(0, 0, 1024, 768);
 			
 			this.hero = new Hero(game);
 		},
