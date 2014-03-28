@@ -30,8 +30,8 @@ define(function(require) {
 	Hero.DRAG = new Phaser.Point(900, 900);
 	Hero.DASH_DRAG = new Phaser.Point(0, 0);
 	Hero.MAX_VELOCITY = new Phaser.Point(500, 500);
-	Hero.DASH_MAX_VELOCITY = new Phaser.Point(2000, 2000);
-	Hero.prototype.isFlying = false;
+	Hero.DASH_MAX_VELOCITY = new Phaser.Point(3000, 3000);
+	Hero.prototype.isFlying = true;
 	Hero.prototype.charging = false;
 	Hero.prototype.dashing = false;
 	Hero.prototype.dashTarget = {x:0, y:0};
@@ -88,7 +88,7 @@ define(function(require) {
 			if(this.isFlying) {
 				sprite.body.acceleration.y = -Hero.THRUST;
 			} else if (sprite.bottom > sprite.game.physics.arcade.bounds.bottom) {
-				sprite.body.velocity.x = 2000;
+				sprite.body.velocity.x = 3000;
 			}
 		} else if (controls.down.isDown) {
 			sprite.body.acceleration.y = Hero.THRUST;

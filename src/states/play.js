@@ -13,6 +13,17 @@ define(function(require) {
 			Hero.preload(game);
 		},
 		create: function(game) {
+			game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+			game.scale.setShowAll();
+			game.scale.pageAlignHorizontally = true;
+			game.scale.pageAlignVeritcally = true;
+			game.scale.refresh();
+
+			window.addEventListener('resize', function() {
+				game.scale.setShowAll();
+				game.scale.refresh();
+			});
+
 			game.add.tileSprite(0, 0, 1100, 1100, 'background');
 			game.world.setBounds(0, 0, 1024, 768);
 			
