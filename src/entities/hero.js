@@ -5,11 +5,15 @@ define(function(require) {
 
 	function Hero(game) {
 		window.hero = this;
+		this.thrust = 1900;
+
 		this.controls = {
 			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
 			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
 			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+            powerUp: game.input.keyboard.addKey(Phaser.Keyboard.UP),
+            powerDown: game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
 			toggleFlight: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
 		};
 		this.sprite = game.add.sprite(10, 10, 'hero-ground');
@@ -24,17 +28,14 @@ define(function(require) {
 		this.sprite.body.collideWorldBounds=true;
 		this.sprite.body.gravity.y = 1500;
 		this.sprite.body.allowGravity = false;
+		this.sprite.body.maxVelocity = new Phaser.Point(500, 500);
 	}
 
-	Hero.THRUST = 1900;
+	Hero.THRUST_INCREMENT = 40;
+	Hero.MAX_INCREMENT = 5;
 	Hero.DRAG = new Phaser.Point(900, 900);
-	Hero.DASH_DRAG = new Phaser.Point(0, 0);
-	Hero.MAX_VELOCITY = new Phaser.Point(500, 500);
-	Hero.DASH_MAX_VELOCITY = new Phaser.Point(3000, 3000);
 	Hero.prototype.isFlying = true;
 	Hero.prototype.charging = false;
-	Hero.prototype.dashing = false;
-	Hero.prototype.dashTarget = {x:0, y:0};
 
 	Hero.preload = function(game) {
 		game.load.spritesheet('hero-flying', 'assets/images/hero-flying.png', 46, 46);
@@ -42,38 +43,29 @@ define(function(require) {
 	};
 
 	Hero.prototype.update = function(game) {
-		var sprite = this.sprite;
-
-		if(this.dashing) {
-			if(game.physics.arcade.distanceToXY(sprite, this.dashTarget.x, this.dashTarget.y) < 100) {
-				this.dashing = false;
-			} else {
-				game.physics.arcade.moveToXY(this.sprite, this.dashTarget.x, this.dashTarget.y, 3000);
-			}
-		} else {
-			if (game.input.mousePointer.isDown) {
-				this.charging = true;
-			} else if(this.charging) {
-				this.startDash();
-			} else {
-				sprite.body.maxVelocity = Hero.MAX_VELOCITY;
-				sprite.body.drag = Hero.DRAG;
-			}
-
-			this.userMove();
-		}
+		this.power();
+		this.sprite.body.drag = Hero.DRAG;
+		this.userMove();
 	};
 
-	Hero.prototype.startDash = function() {
-		var sprite = this.sprite;
+	Hero.prototype.power = function() {
+		if(this.controls.powerUp.isDown) {
+			this.thrust += Hero.THRUST_INCREMENT;
+			this.sprite.body.maxVelocity.x += Hero.MAX_INCREMENT;
+			this.sprite.body.maxVelocity.y += Hero.MAX_INCREMENT;
+		} else if(this.controls.powerDown.isDown) {
+			this.thrust -= Hero.THRUST_INCREMENT;
+			this.sprite.body.maxVelocity.x -= Hero.MAX_INCREMENT;
+			this.sprite.body.maxVelocity.y -= Hero.MAX_INCREMENT;
 
-		this.charging = false;
-		this.dashing = true;
-		sprite.body.acceleration.set(0, 0);
-		sprite.body.drag = Hero.DASH_DRAG;
-		sprite.body.maxVelocity = Hero.DASH_MAX_VELOCITY;
-		this.dashTarget.x = game.input.mousePointer.worldX;
-		this.dashTarget.y = game.input.mousePointer.worldY;
+			if(this.sprite.body.maxVelocity.x < 0) {
+				this.sprite.body.maxVelocity.x = this.sprite.body.maxVelocity.y = 0;
+			}
+
+			if(this.thrust < 0) {
+				this.thrust = 0;
+			}
+		}
 	};
 
 	Hero.prototype.userMove = function() {
@@ -86,20 +78,20 @@ define(function(require) {
 
 		if (controls.up.isDown) {
 			if(this.isFlying) {
-				sprite.body.acceleration.y = -Hero.THRUST;
+				sprite.body.acceleration.y = -this.thrust;
 			} else if (sprite.bottom > sprite.game.physics.arcade.bounds.bottom) {
 				sprite.body.velocity.x = 3000;
 			}
 		} else if (controls.down.isDown) {
-			sprite.body.acceleration.y = Hero.THRUST;
+			sprite.body.acceleration.y = this.thrust;
 		} else {
 			sprite.body.acceleration.y = 0;
 		}
 
 		if (controls.left.isDown) {
-			sprite.body.acceleration.x = -Hero.THRUST;
+			sprite.body.acceleration.x = -this.thrust;
 		} else if (controls.right.isDown) {
-			sprite.body.acceleration.x = Hero.THRUST;
+			sprite.body.acceleration.x = this.thrust;
 		} else {
 			sprite.body.acceleration.x = 0;
 		}
