@@ -2,6 +2,7 @@ define(function(require) {
 	"use strict";
 	var Phaser = require('phaser'),
 		States = require('states'),
+		MeteorController = require('entities/meteor-controller'),
 		Hero = require('entities/hero'),
 		game = require('game');
 	
@@ -27,10 +28,14 @@ define(function(require) {
 			game.add.tileSprite(0, 0, 1100, 1100, 'background');
 			game.world.setBounds(0, 0, 1024, 768);
 			
+			this.meteorController = new MeteorController(game);
 			this.hero = new Hero(game);
 		},
 		update: function(game) {
+			game.physics.arcade.collide(this.hero.sprite, this.meteorController.meteors, this.meteorController.collisionHandler, null, this);
+
 			this.hero.update(game);
+			this.meteorController.update(game);
 		},
 		paused: function() {
 		}
