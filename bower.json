@@ -17,8 +17,8 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "latest",
     "requirejs": "latest",
-    "lodash": "latest"
+    "lodash": "latest",
+    "phaser-official": "latest"
   }
 }
