@@ -4,6 +4,7 @@ define(function(require) {
 	var Phaser = require('phaser');
 
 	function Meteor(data, game) {
+		this.game = game;
 		this.sprite = game.add.sprite(data.x, -50, 'hero-ground');
 		this.sprite.animations.add('walk');
 		this.sprite.animations.play('walk', 20, true);
@@ -16,12 +17,13 @@ define(function(require) {
 		this.sprite.body.velocity.y = data.speed;
 	}
 
-	Meteor.preload = function(game) {
-		game.load.spritesheet('hero-ground', 'assets/images/hero-ground.png', 23, 46);
-	};
-
-	Meteor.prototype.update = function(game) {
-		var sprite = this.sprite;
+	Meteor.prototype = {
+		preload: function(game) {
+			game.load.spritesheet('hero-ground', 'assets/images/hero-ground.png', 23, 46);
+		},
+		update: function(game) {
+			var sprite = this.sprite;
+		}
 	};
 
 	return Meteor;
