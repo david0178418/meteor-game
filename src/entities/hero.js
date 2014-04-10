@@ -22,19 +22,14 @@ define(function(require) {
 		//sprite.body.allowGravity = true;
 		sprite.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
 
-		this.fly = {
+		this.controls = {
 			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
 			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
 			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
-			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
 		};
-		this.dash = {
-			up: game.input.keyboard.addKey(Phaser.Keyboard.UP),
-			left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
-			down: game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
-			right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
-		},
 
 		//easy accessors
 		this.drag = sprite.body.drag;
@@ -43,7 +38,7 @@ define(function(require) {
 	}
 
 	Hero.MAX_VELOCITY = 150;
-	Hero.DRAG = 100;
+	Hero.DRAG = 200;
 	Hero.THRUST = 600;
 	Hero.DASH_VELOCITY = 300;
 
@@ -54,34 +49,35 @@ define(function(require) {
 
 	Hero.prototype = {
 		update: function() {
-			if(!this.flightToggleRegistered && this.fly.toggle.isDown) {
+			if(!this.flightToggleRegistered && this.controls.toggle.isDown) {
 				this.toggleFlight();
-			} else if(this.flightToggleRegistered && !this.fly.toggle.isDown) {
+			} else if(this.flightToggleRegistered && !this.controls.toggle.isDown) {
 				this.flightToggleRegistered = false;
 			}
 
-			if(this.poweredUp) {
+			if(this.poweredUp && this.controls.dash.isDown) {
 				this.userDash();
+			} else {
 				this.userFly();
 			}
 		},
 		userDash: function() {
 			var velocity = this.velocity,
-				dash = this.dash,
+				controls = this.controls,
 				dashVelocity = Hero.DASH_VELOCITY,
 				maxVelocity = Hero.MAX_VELOCITY,
 				vx = 0,
 				vy = 0;
 
-			if (dash.up.isDown) {
+			if (controls.up.isDown) {
 				vy = -dashVelocity;
-			} else if (dash.down.isDown) {
+			} else if (controls.down.isDown) {
 				vy = dashVelocity;
 			}
 
-			if (dash.left.isDown) {
+			if (controls.left.isDown) {
 				vx = -dashVelocity;
-			} else if (dash.right.isDown) {
+			} else if (controls.right.isDown) {
 				vx = dashVelocity;
 			}
 			if(vx || vy) {
@@ -92,21 +88,23 @@ define(function(require) {
 		userFly: function() {
 			var velocity = this.velocity,
 				acceleration = this.acceleration,
-				fly = this.fly,
+				controls = this.controls,
 				thrust = Hero.THRUST,
 				maxVelocity = Hero.MAX_VELOCITY;
 
-			if (fly.up.isDown && velocity.y >= -maxVelocity) {
-				acceleration.y = -thrust;
-			} else if (fly.down.isDown &&  velocity.y <= maxVelocity) {
-				acceleration.y = thrust;
-			} else {
-				acceleration.y = 0;
+			if(this.poweredUp) {
+				if (controls.up.isDown && velocity.y >= -maxVelocity) {
+					acceleration.y = -thrust;
+				} else if (controls.down.isDown &&  velocity.y <= maxVelocity) {
+					acceleration.y = thrust;
+				} else {
+					acceleration.y = 0;
+				}
 			}
 
-			if (fly.left.isDown && velocity.x >= -maxVelocity) {
+			if (controls.left.isDown && velocity.x >= -maxVelocity) {
 				acceleration.x = -thrust;
-			} else if (fly.right.isDown &&  velocity.x <= maxVelocity) {
+			} else if (controls.right.isDown &&  velocity.x <= maxVelocity) {
 				acceleration.x = thrust;
 			} else {
 				acceleration.x = 0;
