@@ -1,25 +1,20 @@
 {
-    "passfail"      : false,  // Stop on first error.
-    "maxerr"        : 100,    // Maximum errors before stopping.
+    "passfail"      : false,
     "browser"       : true,
     "predef"        : [  // Extra globals.
         "require",
         "define"
     ],
-
-    "debug"         : false,  // Allow debugger statements e.g. browser breakpoints.
-    "devel"         : true,   // Allow development statements e.g. `console.log();`.
-
-    // EcmaScript 5.
+    "debug"         : false,
+    "devel"         : true,
     "es5"           : true,
     "strict"        : true,
     "globalstrict"  : false,
-
     "asi"           : false,
     "laxbreak"      : false,
     "boss"          : false,
     "curly"         : true,
-    "eqeqeq"        : true,  // Require triple equals i.e. `===`.
+    "eqeqeq"        : true,
     "eqnull"        : false,
     "evil"          : false,
     "expr"          : false,
@@ -30,7 +25,6 @@
     "shadow"        : false,
     "supernew"      : false,
     "undef"         : true,
-	
     "newcap"        : true,
     "noempty"       : false,
     "onevar"        : true,
