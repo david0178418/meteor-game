@@ -4,13 +4,38 @@ define(function(require) {
 	var _ = require('lodash'),
 		Phaser = require('phaser');
 	
-	Hero.MAX_VELOCITY = 150;
-	Hero.DRAG = 200;
-	Hero.THRUST = 600;
-	Hero.DASH_VELOCITY = 300;
+	function Hero(game) {
+		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
+		//this.game = game;
+		this.flightToggleRegistered = false;
+		
+		/*this.animations.add('walk');
+		this.loadTexture('hero-flying', 0);
+		this.animations.add('fly');
+		this.animations.play('walk', 20, true);*/
+		this.anchor.setTo(0.5, 0.5);
 
-	Hero.preload = function(game) {
-	};
+		game.physics.enable(this, Phaser.Physics.ARCADE);
+		this.body.allowRotation = false;
+		this.body.collideWorldBounds = true;
+		this.body.gravity.y = 400;
+		//this.body.allowGravity = true;
+		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
+
+		this.controls = {
+			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
+		};
+
+		//easy accessors
+		this.drag = this.body.drag;
+		this.velocity = this.body.velocity;
+		this.acceleration = this.body.acceleration;
+	}
 	
 	Hero.prototype = Object.create(Phaser.Sprite.prototype);
 	_.extend(Hero.prototype, {
@@ -49,7 +74,7 @@ define(function(require) {
 			}
 			if(vx || vy) {
 				velocity.x = vx;
-				velocity.y = vy;	
+				velocity.y = vy;
 			}
 		},
 		userFly: function() {
@@ -86,38 +111,13 @@ define(function(require) {
 		}
 	});
 	
-	function Hero(game) {
-		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
-		//this.game = game;
-		this.flightToggleRegistered = false;
-		
-		/*this.animations.add('walk');
-		this.loadTexture('hero-flying', 0);
-		this.animations.add('fly');
-		this.animations.play('walk', 20, true);*/
-		this.anchor.setTo(0.5, 0.5);
+	Hero.MAX_VELOCITY = 150;
+	Hero.DRAG = 200;
+	Hero.THRUST = 600;
+	Hero.DASH_VELOCITY = 300;
 
-		game.physics.enable(this, Phaser.Physics.ARCADE);
-		this.body.allowRotation = false;
-		this.body.collideWorldBounds = true;
-		this.body.gravity.y = 400;
-		//this.body.allowGravity = true;
-		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
-
-		this.controls = {
-			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
-			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
-		};
-
-		//easy accessors
-		this.drag = this.body.drag;
-		this.velocity = this.body.velocity;
-		this.acceleration = this.body.acceleration;
-	}
+	Hero.preload = function(game) {
+	};
 	
 	return Hero;
 });

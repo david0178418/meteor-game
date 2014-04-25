@@ -4,6 +4,17 @@ define(function(require) {
 	var _ = require('lodash'),
 		Phaser = require('phaser');
 	
+	function Meteor(props, game) {
+		Phaser.Sprite.call(this, game, props.x, -50, 'meteor');
+		this.anchor.setTo(0.5, 0.5);
+		game.physics.enable(this, Phaser.Physics.ARCADE);
+
+		this.body.allowRotation = false;
+		this.body.collideWorldBounds=false;
+		this.body.allowGravity = false;
+		this.body.velocity.y = props.speed;
+	}
+	
 	Meteor.preload = function(game) {
 	};
 	
@@ -13,17 +24,6 @@ define(function(require) {
 		update: function(game) {
 		}
 	});
-	
-	function Meteor(data, game) {
-		Phaser.Sprite.call(this, game, data.x, -50 'meteor');
-		this.anchor.setTo(0.5, 0.5);
-		game.physics.enable(this, Phaser.Physics.ARCADE);
-
-		this.body.allowRotation = false;
-		this.body.collideWorldBounds=false;
-		this.body.allowGravity = false;
-		this.body.velocity.y = data.speed;
-	}
 
 	return Meteor;
 });
