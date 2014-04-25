@@ -15,7 +15,7 @@ define(function(require) {
 	});
 	
 	function Meteor(data, game) {
-		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
+		Phaser.Sprite.call(this, game, data.x, -50 'meteor');
 		this.anchor.setTo(0.5, 0.5);
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 
