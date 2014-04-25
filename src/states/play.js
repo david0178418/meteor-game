@@ -10,7 +10,7 @@ define(function(require) {
 	game.state.add(States.Play, {
 		hero: null,
 		preload: function(game) {
-			game.load.image('background','assets/images/starfield.jpg');
+			//game.load.image('background','assets/images/starfield.jpg');
 			Hero.preload(game);
 		},
 		create: function(game) {
@@ -25,14 +25,16 @@ define(function(require) {
 				game.scale.refresh();
 			});
 
-			game.add.tileSprite(0, 0, 1100, 1100, 'background');
+			//game.add.tileSprite(0, 0, 1100, 1100, 'background');
 			game.world.setBounds(0, 0, 1024, 768);
 			
 			this.meteorController = new MeteorController(game);
 			this.hero = new Hero(game);
+			game.add.existing(this.hero);
+			game.stage.backgroundColor = '#333';
 		},
 		update: function(game) {
-			game.physics.arcade.collide(this.hero.sprite, this.meteorController.meteors, this.meteorController.collisionHandler, null, this);
+			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.meteorController.collisionHandler, null, this);
 
 			this.hero.update(game);
 			this.meteorController.update(game);

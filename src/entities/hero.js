@@ -1,53 +1,20 @@
 define(function(require) {
 	"use strict";
 
-	var Phaser = require('phaser');
-
-	function Hero(game) {
-		var sprite = game.add.sprite(100, 100, 'hero-ground');
-		this.game = game;
-		this.sprite = sprite;
-		this.flightToggleRegistered = false;
-		
-		sprite.animations.add('walk');
-		sprite.loadTexture('hero-flying', 0);
-		sprite.animations.add('fly');
-		sprite.animations.play('walk', 20, true);
-		sprite.anchor.setTo(0.5, 0.5);
-
-		game.physics.enable(sprite, Phaser.Physics.ARCADE);
-		sprite.body.allowRotation = false;
-		sprite.body.collideWorldBounds = true;
-		sprite.body.gravity.y = 400;
-		//sprite.body.allowGravity = true;
-		sprite.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
-
-		this.controls = {
-			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
-			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
-		};
-
-		//easy accessors
-		this.drag = sprite.body.drag;
-		this.velocity = sprite.body.velocity;
-		this.acceleration = sprite.body.acceleration;
-	}
-
+	var _ = require('lodash'),
+		Phaser = require('phaser');
+	
 	Hero.MAX_VELOCITY = 150;
 	Hero.DRAG = 200;
 	Hero.THRUST = 600;
 	Hero.DASH_VELOCITY = 300;
 
 	Hero.preload = function(game) {
-		game.load.spritesheet('hero-flying', 'assets/images/hero-flying.png', 46, 46);
-		game.load.spritesheet('hero-ground', 'assets/images/hero-ground.png', 23, 46);
 	};
-
-	Hero.prototype = {
+	
+	Hero.prototype = Object.create(Phaser.Sprite.prototype);
+	_.extend(Hero.prototype, {
+		constructor: Hero,
 		update: function() {
 			if(!this.flightToggleRegistered && this.controls.toggle.isDown) {
 				this.toggleFlight();
@@ -110,15 +77,49 @@ define(function(require) {
 				acceleration.x = 0;
 			}
 		},
-
 		toggleFlight: function() {
 			this.flightToggleRegistered = true;
 			this.poweredUp = !this.poweredUp;
 			var animation = this.poweredUp ? 'fly':'walk';
-			this.sprite.play(animation, 20, true);
-			this.sprite.body.allowGravity = !this.poweredUp;
+			//this.play(animation, 20, true);
+			this.body.allowGravity = !this.poweredUp;
 		}
-	};
+	});
+	
+	function Hero(game) {
+		window.x = this;
+		window.y = Hero;
+		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
+		//this.game = game;
+		this.flightToggleRegistered = false;
+		
+		/*this.animations.add('walk');
+		this.loadTexture('hero-flying', 0);
+		this.animations.add('fly');
+		this.animations.play('walk', 20, true);*/
+		this.anchor.setTo(0.5, 0.5);
 
+		game.physics.enable(this, Phaser.Physics.ARCADE);
+		this.body.allowRotation = false;
+		this.body.collideWorldBounds = true;
+		this.body.gravity.y = 400;
+		//this.body.allowGravity = true;
+		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
+
+		this.controls = {
+			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+			down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+			right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
+		};
+
+		//easy accessors
+		this.drag = this.body.drag;
+		this.velocity = this.body.velocity;
+		this.acceleration = this.body.acceleration;
+	}
+	
 	return Hero;
 });
