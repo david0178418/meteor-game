@@ -3,6 +3,7 @@
     "browser"       : true,
     "predef"        : [  // Extra globals.
         "require",
+		"requirejs",
         "define"
     ],
     "debug"         : false,
