@@ -87,8 +87,6 @@ define(function(require) {
 	});
 	
 	function Hero(game) {
-		window.x = this;
-		window.y = Hero;
 		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
 		//this.game = game;
 		this.flightToggleRegistered = false;

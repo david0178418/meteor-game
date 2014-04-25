@@ -36,7 +36,7 @@ define(function(require) {
 				},
 				this.game);
 			
-			this.meteors.add(meteor.sprite);
+			this.meteors.add(meteor);
 		},
 
 		collisionHandler: function(hero, meteor) {

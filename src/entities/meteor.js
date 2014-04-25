@@ -15,15 +15,14 @@ define(function(require) {
 	});
 	
 	function Meteor(data, game) {
-		this.game = game;
-		this.sprite = game.add.sprite(data.x, -50, 'meteor');
-		this.sprite.anchor.setTo(0.5, 0.5);
-		game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
+		this.anchor.setTo(0.5, 0.5);
+		game.physics.enable(this, Phaser.Physics.ARCADE);
 
-		this.sprite.body.allowRotation = false;
-		this.sprite.body.collideWorldBounds=false;
-		this.sprite.body.allowGravity = false;
-		this.sprite.body.velocity.y = data.speed;
+		this.body.allowRotation = false;
+		this.body.collideWorldBounds=false;
+		this.body.allowGravity = false;
+		this.body.velocity.y = data.speed;
 	}
 
 	return Meteor;
