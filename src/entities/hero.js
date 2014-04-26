@@ -1,25 +1,17 @@
 define(function(require) {
 	"use strict";
-
 	var _ = require('lodash'),
 		Phaser = require('phaser');
 	
 	function Hero(game) {
-		Phaser.Sprite.call(this, game, 100, 100, 'hero-ground');
-		//this.game = game;
-		this.flightToggleRegistered = false;
-		
-		/*this.animations.add('walk');
-		this.loadTexture('hero-flying', 0);
-		this.animations.add('fly');
-		this.animations.play('walk', 20, true);*/
+		Phaser.Sprite.call(this, game, 100, 300, 'hero-ground');
 		this.anchor.setTo(0.5, 0.5);
 
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds = true;
 		this.body.gravity.y = 400;
-		//this.body.allowGravity = true;
+		
 		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
 
 		this.controls = {
@@ -30,6 +22,8 @@ define(function(require) {
 			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
 			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
 		};
+		
+		this.poweredUp = true;
 
 		//easy accessors
 		this.drag = this.body.drag;
@@ -41,12 +35,6 @@ define(function(require) {
 	_.extend(Hero.prototype, {
 		constructor: Hero,
 		update: function() {
-			if(!this.flightToggleRegistered && this.controls.toggle.isDown) {
-				this.toggleFlight();
-			} else if(this.flightToggleRegistered && !this.controls.toggle.isDown) {
-				this.flightToggleRegistered = false;
-			}
-
 			if(this.poweredUp && this.controls.dash.isDown) {
 				this.userDash();
 			} else {
@@ -101,20 +89,13 @@ define(function(require) {
 			} else {
 				acceleration.x = 0;
 			}
-		},
-		toggleFlight: function() {
-			this.flightToggleRegistered = true;
-			this.poweredUp = !this.poweredUp;
-			var animation = this.poweredUp ? 'fly':'walk';
-			//this.play(animation, 20, true);
-			this.body.allowGravity = !this.poweredUp;
 		}
 	});
 	
-	Hero.MAX_VELOCITY = 150;
-	Hero.DRAG = 200;
+	Hero.MAX_VELOCITY = 200;
+	Hero.DRAG = 300;
 	Hero.THRUST = 600;
-	Hero.DASH_VELOCITY = 300;
+	Hero.DASH_VELOCITY = 350;
 
 	Hero.preload = function(game) {
 	};

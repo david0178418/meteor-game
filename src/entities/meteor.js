@@ -1,6 +1,5 @@
 define(function(require) {
 	"use strict";
-
 	var _ = require('lodash'),
 		Phaser = require('phaser');
 	
@@ -11,11 +10,12 @@ define(function(require) {
 
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds=false;
-		this.body.allowGravity = false;
+		this.body.allowGravity = true;
 		this.body.velocity.y = props.speed;
 	}
 	
 	Meteor.preload = function(game) {
+		game.load.image('meteor', '');
 	};
 	
 	Meteor.prototype = Object.create(Phaser.Sprite.prototype);
