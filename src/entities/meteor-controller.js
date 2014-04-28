@@ -26,14 +26,20 @@ define(function(require) {
 		},
 
 		spawnMeteor: function() {
-			var meteor = new Meteor({
+			var meteor = this.meteors.getFirstDead(),
+				properties = {
 					x: _.random(100, this.game.world.width - 100),
 					angle: 0,
 					speed: this.meteorSpeed
-				},
-				this.game);
+				};
 			
-			this.meteors.add(meteor);
+			if(!meteor) {
+				meteor = new Meteor(properties, this.game);
+
+				this.meteors.add(meteor);
+			} else {
+				meteor.startFall(properties);
+			}
 		},
 	};
 	

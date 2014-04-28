@@ -2,35 +2,35 @@ define(function(require) {
 	"use strict";
 	var _ = require('lodash'),
 		Phaser = require('phaser'),
-		City = require('entities/city');
+		Building = require('entities/building');
 
-	function CityController(game) {
+	function BuildingController(game) {
 		this.game = game;
 		this.cities = game.add.group();
-		this.cities.add(new City({
+		this.cities.add(new Building({
 			x: 100,
 			y: game.height
 		}, game));
 		
-		this.cities.add(new City({
+		this.cities.add(new Building({
 			x: game.width / 2,
 			y: game.height
 		}, game));
 		
-		this.cities.add(new City({
+		this.cities.add(new Building({
 			x: game.width - 100,
 			y: game.height
 		}, game));
 	}
 
-	CityController.prototype = {
+	BuildingController.prototype = {
 		update: function(game) {
 		},
 	};
 	
-	CityController.preload = function(game) {
-		City.preload(game);
+	BuildingController.preload = function(game) {
+		Building.preload(game);
 	};
 
-	return CityController;
+	return BuildingController;
 });

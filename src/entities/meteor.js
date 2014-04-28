@@ -4,7 +4,7 @@ define(function(require) {
 		Phaser = require('phaser');
 	
 	function Meteor(props, game) {
-		Phaser.Sprite.call(this, game, props.x, -50, 'meteor');
+		Phaser.Sprite.call(this, game, props.x, Meteor.SPAWN_HEIGHT, 'meteor');
 		// XXX TEMP SIZE FOR PLACEHOLDER
 		this.width = 50;
 		this.height = 50;
@@ -15,8 +15,11 @@ define(function(require) {
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds=false;
 		this.body.allowGravity = true;
-		this.body.velocity.y = props.speed;
+		
+		this.startFall(props);
 	}
+	
+	Meteor.SPAWN_HEIGHT = -50;
 	
 	Meteor.preload = function(game) {
 		game.load.image('meteor', '');
@@ -29,6 +32,10 @@ define(function(require) {
 			if(this.y > this.game.height) {
 				this.kill();
 			}
+		},
+		startFall: function(props) {
+			this.reset(props.x, Meteor.SPAWN_HEIGHT);
+			this.body.velocity.y = props.speed;
 		}
 	});
 
