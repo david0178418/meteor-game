@@ -16,6 +16,7 @@ define(function(require) {
 			MeteorController.preload(game);
 		},
 		create: function(game) {
+			game.physics.startSystem(Phaser.Physics.ARCADE);
 			game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
 			game.scale.setShowAll();
 			game.scale.pageAlignHorizontally = true;
@@ -36,23 +37,31 @@ define(function(require) {
 			game.stage.backgroundColor = '#333';
 		},
 		update: function(game) {
+			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, this.collideHeroAuraMeteor, null, this);
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
 			
-			game.physics.arcade.collide(this.meteorController.meteors, this.cityController.cities, this.collidemeteorCity, null, this);
+			game.physics.arcade.collide(this.meteorController.meteors, this.cityController.cities, this.collideCityMeteor, null, this);
 			
-			game.physics.arcade.collide(this.hero, this.cityController.cities);
+			this.game.physics.arcade.collide(this.hero, this.cityController.cities);
 
 			this.hero.update(game);
 			this.meteorController.update(game);
 		},
 		paused: function() {
 		},
+		collideHeroAuraMeteor: function(aura, meteor) {
+			meteor.kill();
+		},
 		collideHeroMeteor: function(hero, meteor) {
 			meteor.kill();
+			
+			if(!hero.controls.dash.isDown) {
+				hero.velocity.y = 500;
+			}
 		},
 		collideCityMeteor: function(meteor, city) {
 			meteor.kill();
-			city.kill();
+			city.damage(1);
 		}
 	});
 });

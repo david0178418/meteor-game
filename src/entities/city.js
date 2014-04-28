@@ -2,7 +2,8 @@ define(function(require) {
 	"use strict";
 
 	var _ = require('lodash'),
-		Phaser = require('phaser');
+		Phaser = require('phaser'),
+		damageComponent = require('components/damage');
 	
 	function City(props, game) {
 		Phaser.Sprite.call(this, game, props.x, props.y, 'city');
@@ -16,16 +17,23 @@ define(function(require) {
 		this.body.immovable = true;
 	}
 	
-	City.prototype = Object.create(Phaser.Sprite.prototype);
-	
-	_.extend(City.prototype, {
-		constructor: City,
-		update: function(game) {
-		}
-	});
-	
+	City.HIT_POINTS = 4;
 	City.preload = function(game) {
 	};
+	
+	City.prototype = Object.create(Phaser.Sprite.prototype);
+	
+	_.extend(City.prototype, damageComponent(City.HIT_POINTS), {
+		constructor: City,
+		update: function(game) {
+			if(!this.hitPoints) {
+				this.kill();
+				return;
+			}
+			
+			this.height = this.hitPoints * 50;
+		},
+	});
 
 	return City;
 });

@@ -5,6 +5,10 @@ define(function(require) {
 	
 	function Meteor(props, game) {
 		Phaser.Sprite.call(this, game, props.x, -50, 'meteor');
+		// XXX TEMP SIZE FOR PLACEHOLDER
+		this.width = 50;
+		this.height = 50;
+		// END
 		this.anchor.setTo(0.5, 0.5);
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 
@@ -21,7 +25,10 @@ define(function(require) {
 	Meteor.prototype = Object.create(Phaser.Sprite.prototype);
 	_.extend(Meteor.prototype, {
 		constructor: Meteor,
-		update: function(game) {
+		update: function() {
+			if(this.y > this.game.height) {
+				this.kill();
+			}
 		}
 	});
 

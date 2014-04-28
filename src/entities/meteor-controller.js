@@ -11,6 +11,7 @@ define(function(require) {
 		this.intervalRange = 2000;
 		this.nextSpawn = 3000;
 		this.meteorSpeed = 150;
+		window.y = this.meteors;
 	}
 
 	MeteorController.prototype = {
