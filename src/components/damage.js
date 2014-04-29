@@ -3,10 +3,12 @@ define(function(require) {
 	return function(hitPoints) {
 		return {
 			hitPoints: hitPoints,
-			newDamage: false,
+			isDead: function() {
+				return this.hitPoints <= 0;
+			},
 			damage: function(points) {
 				this.hitPoints -= points;
-				this.newDamage = true;
+				return this.hitPoints;
 			}
 		};
 	};

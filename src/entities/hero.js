@@ -40,13 +40,13 @@ define(function(require) {
 		this.poweredUp = true;
 		this.stunned = false;
 		
-		window.x = this;
-
 		//easy accessors
 		this.drag = this.body.drag;
 		this.velocity = this.body.velocity;
 		this.acceleration = this.body.acceleration;
+		
 		this.game.add.existing(this);
+		window.x = this;
 	}
 	
 	Hero.HIT_POINTS = 10;
@@ -69,14 +69,11 @@ define(function(require) {
 			}
 			
 			if(!this.stunned && this.poweredUp && this.controls.dash.isDown) {
-				this.aura.flareUp();
+				this.aura.flareUp(this.x, this.y);
 				this.userDash();
 			} else {
-				this.aura.flareDown();
 				this.userFly();
 			}
-			
-			this.game.physics.arcade.moveToObject(this.aura, this, 1, 100);
 		},
 		userDash: function() {
 			var velocity = this.velocity,
@@ -85,6 +82,9 @@ define(function(require) {
 				maxVelocity = Hero.MAX_VELOCITY,
 				vx = 0,
 				vy = 0;
+			
+			this.acceleration.x = 0;
+			this.acceleration.y = 0;
 			
 			this.body.allowGravity = false;
 			

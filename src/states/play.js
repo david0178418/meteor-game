@@ -37,7 +37,7 @@ define(function(require) {
 			game.stage.backgroundColor = '#333';
 		},
 		update: function(game) {
-			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, this.collideHeroAuraMeteor, null, this);
+			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, null, this.collideHeroAuraMeteor, this);
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
 			
 			game.physics.arcade.collide(this.meteorController.meteors, this.buildingController.cities, this.collideBuildingMeteor, null, this);
@@ -49,16 +49,20 @@ define(function(require) {
 		},
 		paused: function() {
 		},
-		collideHeroAuraMeteor: function(aura, meteor) {
-			meteor.kill();
+		collideHeroAuraMeteor: function(particle, meteor) {
+			particle.kill();
+			meteor.damage(1);
+			console.log(meteor.hitPoints);
+			if(meteor.isDead()) {
+				meteor.kill();
+			}
+			return false; //use as process if intersecting to prevent physics interaction
 		},
 		collideHeroMeteor: function(hero, meteor) {
 			meteor.kill();
 			
-			if(!hero.controls.dash.isDown) {
-				hero.stun();
-				hero.velocity.y = 500;
-			}
+			hero.stun();
+			hero.velocity.y = 500;
 		},
 		collideBuildingMeteor: function(meteor, building) {
 			meteor.kill();
