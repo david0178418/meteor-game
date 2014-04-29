@@ -56,6 +56,7 @@ define(function(require) {
 			meteor.kill();
 			
 			if(!hero.controls.dash.isDown) {
+				hero.stun();
 				hero.velocity.y = 500;
 			}
 		},

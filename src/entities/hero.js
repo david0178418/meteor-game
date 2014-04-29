@@ -38,6 +38,7 @@ define(function(require) {
 		};
 		
 		this.poweredUp = true;
+		this.stunned = false;
 		
 		window.x = this;
 
@@ -53,6 +54,7 @@ define(function(require) {
 	Hero.DRAG = 300;
 	Hero.THRUST = 600;
 	Hero.DASH_VELOCITY = 350;
+	Hero.STUN_TIME = 700;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -62,7 +64,11 @@ define(function(require) {
 	_.extend(Hero.prototype, damageComponent(Hero.HIT_POINTS), {
 		constructor: Hero,
 		update: function(game) {
-			if(this.poweredUp && this.controls.dash.isDown) {
+			if(this.stunned) {
+				this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
+			}
+			
+			if(!this.stunned && this.poweredUp && this.controls.dash.isDown) {
 				this.aura.flareUp();
 				this.userDash();
 			} else {
@@ -81,7 +87,7 @@ define(function(require) {
 				vy = 0;
 			
 			this.body.allowGravity = false;
-
+			
 			if (controls.up.isDown) {
 				vy = -dashVelocity;
 			} else if (controls.down.isDown) {
@@ -107,7 +113,7 @@ define(function(require) {
 			
 			this.body.allowGravity = true;
 
-			if(this.poweredUp) {
+			if(!this.stunned && this.poweredUp) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {
 					acceleration.y = -thrust;
 				} else if (controls.down.isDown &&  velocity.y <= maxVelocity) {
@@ -124,6 +130,12 @@ define(function(require) {
 			} else {
 				acceleration.x = 0;
 			}
+		},
+		stun: function() {
+			this.stunned = true;
+			this.stunnedTime = this.game.time.now;
+			this.acceleration.y = 0;
+			this.velocity.y = 0;
 		}
 	});
 	
