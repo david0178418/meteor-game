@@ -5,7 +5,7 @@ define(function(require) {
 		Phaser = require('phaser'),
 		damageComponent = require('components/damage');
 	
-	function City(props, game) {
+	function Building(props, game) {
 		Phaser.Sprite.call(this, game, props.x, props.y, 'city');
 		// XXX TEMP SIZE FOR PLACEHOLDER
 		this.width = 50;
@@ -17,14 +17,14 @@ define(function(require) {
 		this.body.immovable = true;
 	}
 	
-	City.HIT_POINTS = 4;
-	City.preload = function(game) {
+	Building.HIT_POINTS = 4;
+	Building.preload = function(game) {
 	};
 	
-	City.prototype = Object.create(Phaser.Sprite.prototype);
+	Building.prototype = Object.create(Phaser.Sprite.prototype);
 	
-	_.extend(City.prototype, damageComponent(City.HIT_POINTS), {
-		constructor: City,
+	_.extend(Building.prototype, damageComponent(Building.HIT_POINTS), {
+		constructor: Building,
 		update: function(game) {
 			if(!this.hitPoints) {
 				this.kill();
@@ -35,5 +35,5 @@ define(function(require) {
 		},
 	});
 
-	return City;
+	return Building;
 });

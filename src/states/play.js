@@ -4,7 +4,7 @@ define(function(require) {
 		States = require('states'),
 		MeteorController = require('entities/meteor-controller'),
 		Hero = require('entities/hero'),
-		CityController = require('entities/city-controller'),
+		BuildingController = require('entities/building-controller'),
 		game = require('game');
 	
 	States.Play = 'play';
@@ -12,7 +12,7 @@ define(function(require) {
 		hero: null,
 		preload: function(game) {
 			Hero.preload(game);
-			CityController.preload(game);
+			BuildingController.preload(game);
 			MeteorController.preload(game);
 		},
 		create: function(game) {
@@ -31,37 +31,42 @@ define(function(require) {
 			game.world.setBounds(0, 0, game.width, game.height);
 			
 			this.meteorController = new MeteorController(game);
-			this.cityController = new CityController(game);
+			this.buildingController = new BuildingController(game);
 			this.hero = new Hero(game);
 			game.add.existing(this.hero);
 			game.stage.backgroundColor = '#333';
 		},
 		update: function(game) {
-			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, this.collideHeroAuraMeteor, null, this);
+			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, null, this.collideHeroAuraMeteor, this);
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
 			
-			game.physics.arcade.collide(this.meteorController.meteors, this.cityController.cities, this.collideCityMeteor, null, this);
+			game.physics.arcade.collide(this.meteorController.meteors, this.buildingController.cities, this.collideBuildingMeteor, null, this);
 			
-			this.game.physics.arcade.collide(this.hero, this.cityController.cities);
+			this.game.physics.arcade.collide(this.hero, this.buildingController.cities);
 
 			this.hero.update(game);
 			this.meteorController.update(game);
 		},
 		paused: function() {
 		},
-		collideHeroAuraMeteor: function(aura, meteor) {
-			meteor.kill();
+		collideHeroAuraMeteor: function(particle, meteor) {
+			particle.kill();
+			meteor.damage(1);
+			console.log(meteor.hitPoints);
+			if(meteor.isDead()) {
+				meteor.kill();
+			}
+			return false; //use as process if intersecting to prevent physics interaction
 		},
 		collideHeroMeteor: function(hero, meteor) {
 			meteor.kill();
 			
-			if(!hero.controls.dash.isDown) {
-				hero.velocity.y = 500;
-			}
+			hero.stun();
+			hero.velocity.y = 500;
 		},
-		collideCityMeteor: function(meteor, city) {
+		collideBuildingMeteor: function(meteor, building) {
 			meteor.kill();
-			city.damage(1);
+			building.damage(1);
 		}
 	});
 });

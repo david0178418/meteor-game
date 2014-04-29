@@ -38,14 +38,15 @@ define(function(require) {
 		};
 		
 		this.poweredUp = true;
+		this.stunned = false;
 		
-		window.x = this;
-
 		//easy accessors
 		this.drag = this.body.drag;
 		this.velocity = this.body.velocity;
 		this.acceleration = this.body.acceleration;
+		
 		this.game.add.existing(this);
+		window.x = this;
 	}
 	
 	Hero.HIT_POINTS = 10;
@@ -53,6 +54,7 @@ define(function(require) {
 	Hero.DRAG = 300;
 	Hero.THRUST = 600;
 	Hero.DASH_VELOCITY = 350;
+	Hero.STUN_TIME = 700;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -62,15 +64,16 @@ define(function(require) {
 	_.extend(Hero.prototype, damageComponent(Hero.HIT_POINTS), {
 		constructor: Hero,
 		update: function(game) {
-			if(this.poweredUp && this.controls.dash.isDown) {
-				this.aura.flareUp();
-				this.userDash();
-			} else {
-				this.aura.flareDown();
-				this.userFly();
+			if(this.stunned) {
+				this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
 			}
 			
-			this.game.physics.arcade.moveToObject(this.aura, this, 1, 100);
+			if(!this.stunned && this.poweredUp && this.controls.dash.isDown) {
+				this.aura.flareUp(this.x, this.y);
+				this.userDash();
+			} else {
+				this.userFly();
+			}
 		},
 		userDash: function() {
 			var velocity = this.velocity,
@@ -80,8 +83,11 @@ define(function(require) {
 				vx = 0,
 				vy = 0;
 			
+			this.acceleration.x = 0;
+			this.acceleration.y = 0;
+			
 			this.body.allowGravity = false;
-
+			
 			if (controls.up.isDown) {
 				vy = -dashVelocity;
 			} else if (controls.down.isDown) {
@@ -107,7 +113,7 @@ define(function(require) {
 			
 			this.body.allowGravity = true;
 
-			if(this.poweredUp) {
+			if(!this.stunned && this.poweredUp) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {
 					acceleration.y = -thrust;
 				} else if (controls.down.isDown &&  velocity.y <= maxVelocity) {
@@ -124,6 +130,12 @@ define(function(require) {
 			} else {
 				acceleration.x = 0;
 			}
+		},
+		stun: function() {
+			this.stunned = true;
+			this.stunnedTime = this.game.time.now;
+			this.acceleration.y = 0;
+			this.velocity.y = 0;
 		}
 	});
 	
