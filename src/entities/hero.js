@@ -15,9 +15,9 @@ define(function(require) {
 		
 		this.aura = new Aura(game);
 		
-		//this.addChild(this.aura);
-		this.aura.x = this.x;
-		this.aura.y = this.y;
+		this.addChild(this.aura);
+		/*this.aura.x = this.x;
+		this.aura.y = this.y;*/
 		
 		game.add.existing(this.aura);
 
@@ -74,6 +74,8 @@ define(function(require) {
 			} else {
 				this.userFly();
 			}
+			
+			this.aura.gravity = -400 * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
 		},
 		userDash: function() {
 			var velocity = this.velocity,

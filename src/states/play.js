@@ -52,7 +52,7 @@ define(function(require) {
 		collideHeroAuraMeteor: function(particle, meteor) {
 			particle.kill();
 			meteor.damage(1);
-			console.log(meteor.hitPoints);
+			
 			if(meteor.isDead()) {
 				meteor.kill();
 			}

@@ -10,11 +10,12 @@ define(function(require) {
 		this.makeParticles('aura');
 		this.setRotation(0, 0);
 		this.setAlpha(1, 0, Aura.LIFE_SPAN);
-		this.setScale(0, .75, 0, .75, Aura.LIFE_SPAN, Phaser.Easing.Sinusoidal.Out);
-		this.gravity = -400;
+		this.setScale(1, 0, 1, 0, Aura.LIFE_SPAN, Phaser.Easing.Cubic.In);
+		this.minParticleSpeed.set(0, 0);
+		this.maxParticleSpeed.set(0, 0);
 	}
 	
-	Aura.LIFE_SPAN = 650;
+	Aura.LIFE_SPAN = 800;
 	Aura.preload = function(game) {
 	};
 	
