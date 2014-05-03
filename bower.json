@@ -19,6 +19,6 @@
   "dependencies": {
     "requirejs": "latest",
     "lodash": "latest",
-    "phaser-official": "latest"
+    "phaser-official": "2.0.3"
   }
 }
