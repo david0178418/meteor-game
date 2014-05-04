@@ -16,6 +16,7 @@ define(function(require) {
 	}
 	
 	Aura.LIFE_SPAN = 700;
+	
 	Aura.preload = function(game) {
 		game.load.image('aura', 'assets/images/aura.png');
 	};

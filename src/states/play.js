@@ -66,24 +66,25 @@ define(function(require) {
 		collideHeroMeteor: function(hero, meteor) {
 			var meteorTouching = meteor.body.touching;
 			
+			hero.stun();
+			
 			if(meteorTouching.right) {
 				meteor.body.velocity.x = -300;
 				meteor.body.velocity.y = -100;
 				
-				hero.stun();
 				hero.velocity.x = 300;
 			} else if(meteorTouching.left) {
 				meteor.body.velocity.x = 300;
 				meteor.body.velocity.y = -100;
 				
-				hero.stun();
 				hero.velocity.x = -300;
 			} else {
 				meteor.kill();
 				
 				if(meteorTouching.down) {
-					hero.stun();
 					hero.velocity.y = 500;
+				} else {
+					hero.velocity.y = -300;
 				}
 			}
 		},
