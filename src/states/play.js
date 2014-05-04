@@ -40,10 +40,7 @@ define(function(require) {
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
 			
 			game.physics.arcade.collide(this.meteorController.meteors, this.buildingController.cities, this.collideBuildingMeteor, null, this);
-			game.physics.arcade.collide(this.meteorController.meteors, this.meteorController.meteors, function(meteorA, meteorB) {
-				meteorA.kill();
-				meteorB.kill();
-			}, null, this);
+			game.physics.arcade.collide(this.meteorController.meteors, this.meteorController.meteors, this.collideMeteorMeteor, null, this);
 			
 			this.game.physics.arcade.collide(this.hero, this.buildingController.cities);
 
@@ -62,9 +59,12 @@ define(function(require) {
 			
 			return false; //use as process if intersecting to prevent physics interaction
 		},
+		collideMeteorMeteor: function(meteorA, meteorB) {
+			meteorA.kill();
+			meteorB.kill();
+		},
 		collideHeroMeteor: function(hero, meteor) {
 			var meteorTouching = meteor.body.touching;
-			
 			
 			if(meteorTouching.right) {
 				meteor.body.velocity.x = -300;

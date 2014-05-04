@@ -7,8 +7,8 @@ define(function(require) {
 	function Meteor(props, game) {
 		Phaser.Sprite.call(this, game, props.x, Meteor.SPAWN_HEIGHT, 'meteor');
 		// XXX TEMP SIZE FOR PLACEHOLDER
-		this.width = 50;
-		this.height = 50;
+		this.width = 75;
+		this.height = 75;
 		// END
 		this.anchor.setTo(0.5, 0.5);
 		game.physics.enable(this, Phaser.Physics.ARCADE);

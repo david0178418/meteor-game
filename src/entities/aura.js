@@ -15,7 +15,7 @@ define(function(require) {
 		this.maxParticleSpeed.set(0, 0);
 	}
 	
-	Aura.LIFE_SPAN = 800;
+	Aura.LIFE_SPAN = 700;
 	Aura.preload = function(game) {
 	};
 	

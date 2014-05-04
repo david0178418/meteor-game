@@ -16,8 +16,6 @@ define(function(require) {
 		this.aura = new Aura(game);
 		
 		this.addChild(this.aura);
-		/*this.aura.x = this.x;
-		this.aura.y = this.y;*/
 		
 		game.add.existing(this.aura);
 
@@ -51,9 +49,9 @@ define(function(require) {
 	}
 	
 	Hero.HIT_POINTS = 10;
-	Hero.MAX_VELOCITY = 300;
+	Hero.MAX_VELOCITY = 200;
 	Hero.DRAG = 300;
-	Hero.THRUST = 800;
+	Hero.THRUST = 3000;
 	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
 
@@ -69,14 +67,12 @@ define(function(require) {
 				this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
 			}
 			
-			if(!this.stunned && this.poweredUp && this.controls.dash.isDown) {
-				this.aura.flareUp(this.x, this.y);
-				this.userDash();
-			} else {
+			if(!this.stunned && this.poweredUp) {
 				this.userFly();
+				this.aura.flareUp(this.x, this.y);
 			}
 			
-			this.aura.gravity = -400 * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
+			this.aura.gravity = -Hero.MAX_VELOCITY * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
 		},
 		userDash: function() {
 			var velocity = this.velocity,
@@ -105,7 +101,7 @@ define(function(require) {
 			if(vx || vy) {
 				velocity.x = vx;
 				velocity.y = vy;
-				this.body.drag.x = this.body.drag.y = 0;
+				this.body.drag.x = this.body.drag.y = Hero.DRAG;//0;
 			} else {
 				this.body.drag.x = this.body.drag.y = Hero.DRAG;
 			}
@@ -119,7 +115,7 @@ define(function(require) {
 			
 			//this.body.allowGravity = true;
 
-			if(!this.stunned && this.poweredUp) {
+			if(!this.stunned) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {
 					acceleration.y = -thrust;
 				} else if (controls.down.isDown &&  velocity.y <= maxVelocity) {
@@ -140,8 +136,8 @@ define(function(require) {
 		stun: function() {
 			this.stunned = true;
 			this.stunnedTime = this.game.time.now;
-			this.acceleration.y = 0;
-			this.velocity.y = 0;
+			this.acceleration.x = this.acceleration.y = 0;
+			this.velocity.x = this.velocity.y = 0;
 		}
 	});
 	
