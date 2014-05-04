@@ -13,6 +13,7 @@ define(function(require) {
 		this.setScale(1, 0, 1, 0, Aura.LIFE_SPAN);
 		this.minParticleSpeed.set(0, 0);
 		this.maxParticleSpeed.set(0, 0);
+		this.gravity = 0;
 	}
 	
 	Aura.LIFE_SPAN = 700;

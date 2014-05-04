@@ -22,7 +22,6 @@ define(function(require) {
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds = true;
-		//this.body.gravity.y = 400;
 		this.body.allowGravity = false;
 		
 		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
@@ -50,6 +49,7 @@ define(function(require) {
 	
 	Hero.HIT_POINTS = 10;
 	Hero.MAX_VELOCITY = 200;
+	Hero.MAX_DASH_VELOCITY = 300;
 	Hero.DRAG = 300;
 	Hero.THRUST = 3000;
 	Hero.DASH_VELOCITY = 300;
@@ -63,23 +63,26 @@ define(function(require) {
 	_.extend(Hero.prototype, damageComponent(Hero.HIT_POINTS), {
 		constructor: Hero,
 		update: function(game) {
-			if(this.stunned) {
-				this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
+			if(this.controls.dash.isDown) {
+				this.poweredUp = true;
+				this.stunned = false;
+			} else {
+				this.poweredUp = false;
+				if(this.stunned) {
+					this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
+				}
 			}
 			
-			if(!this.stunned && this.poweredUp) {
+			if(!this.stunned) {
 				this.userFly();
 				this.aura.flareUp(this.x, this.y);
 			}
-			
-			//this.aura.gravity = -Hero.MAX_VELOCITY * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
-			this.aura.gravity = 0;
 		},
 		userDash: function() {
 			var velocity = this.velocity,
 				controls = this.controls,
 				dashVelocity = Hero.DASH_VELOCITY,
-				maxVelocity = Hero.MAX_VELOCITY,
+				maxVelocity =  this.poweredUp ? Hero.MAX_DASH_VELOCITY : Hero.MAX_VELOCITY,
 				vx = 0,
 				vy = 0;
 			
@@ -112,10 +115,8 @@ define(function(require) {
 				acceleration = this.acceleration,
 				controls = this.controls,
 				thrust = Hero.THRUST,
-				maxVelocity = Hero.MAX_VELOCITY;
+				maxVelocity = this.controls.dash.isDown ? Hero.MAX_DASH_VELOCITY : Hero.MAX_VELOCITY;
 			
-			//this.body.allowGravity = true;
-
 			if(!this.stunned) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {
 					acceleration.y = -thrust;

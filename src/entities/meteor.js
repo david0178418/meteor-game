@@ -23,6 +23,7 @@ define(function(require) {
 	
 	Meteor.SPAWN_HEIGHT = -50;
 	Meteor.TOUGHNESS = 10;
+	Meteor.MAX_VELOCITY = 200;
 	
 	Meteor.preload = function(game) {
 		game.load.image('meteor', '');
@@ -38,7 +39,6 @@ define(function(require) {
 		},
 		startFall: function(props) {
 			this.reset(props.x, Meteor.SPAWN_HEIGHT);
-			//this.body.velocity.y = props.speed;
 			this.hitPoints = Meteor.TOUGHNESS;
 		}
 	});

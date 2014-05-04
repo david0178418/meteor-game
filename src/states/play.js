@@ -38,7 +38,6 @@ define(function(require) {
 		},
 		update: function(game) {
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
-			
 			game.physics.arcade.collide(this.meteorController.meteors, this.buildingController.cities, this.collideBuildingMeteor, null, this);
 			game.physics.arcade.collide(this.meteorController.meteors, this.meteorController.meteors, this.collideMeteorMeteor, null, this);
 			
@@ -49,24 +48,22 @@ define(function(require) {
 		},
 		paused: function() {
 		},
-		collideHeroAuraMeteor: function(particle, meteor) {
-			particle.kill();
-			meteor.damage(1);
-			
-			if(meteor.isDead()) {
-				meteor.kill();
-			}
-			
-			return false; //use as process if intersecting to prevent physics interaction
-		},
 		collideMeteorMeteor: function(meteorA, meteorB) {
 			meteorA.kill();
 			meteorB.kill();
 		},
 		collideHeroMeteor: function(hero, meteor) {
-			var meteorTouching = meteor.body.touching;
+			var meteorTouching;
+			
+			if(hero.poweredUp) {
+				meteor.kill();
+				return;
+			}
+			
+			
 			
 			hero.stun();
+			meteorTouching = meteor.body.touching;
 			
 			if(meteorTouching.right) {
 				meteor.body.velocity.x = -300;
@@ -82,9 +79,9 @@ define(function(require) {
 				meteor.kill();
 				
 				if(meteorTouching.down) {
-					hero.velocity.y = 500;
+					hero.velocity.y = 400;
 				} else {
-					hero.velocity.y = -300;
+					hero.velocity.y = -200;
 				}
 			}
 		},
