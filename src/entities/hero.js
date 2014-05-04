@@ -11,20 +11,6 @@ define(function(require) {
 		this.width = 16;
 		this.height = 16;
 		// END
-		this.anchor.setTo(0.5, 0.5);
-		
-		this.aura = new Aura(game);
-		
-		this.addChild(this.aura);
-		
-		game.add.existing(this.aura);
-
-		game.physics.enable(this, Phaser.Physics.ARCADE);
-		this.body.allowRotation = false;
-		this.body.collideWorldBounds = true;
-		this.body.allowGravity = false;
-		
-		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
 		
 		this.controls = {
 			up: game.input.keyboard.addKey(Phaser.Keyboard.W),
@@ -34,17 +20,29 @@ define(function(require) {
 			toggle: game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
 			dash: game.input.keyboard.addKey(Phaser.Keyboard.SHIFT)
 		};
-		
-		this.poweredUp = true;
+		this.anchor.setTo(0.5, 0.5);
+		this.poweredUp = false;
 		this.stunned = false;
+		this.power = Hero.STARTING_POWER;
+		this.aura = new Aura(game);
+		this.addChild(this.aura);
+		
+		
+		game.physics.enable(this, Phaser.Physics.ARCADE);
+		this.body.allowRotation = false;
+		this.body.collideWorldBounds = true;
+		this.body.allowGravity = false;
+		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
 		
 		//easy accessors
 		this.drag = this.body.drag;
 		this.velocity = this.body.velocity;
 		this.acceleration = this.body.acceleration;
 		
+		
+		this.game.add.existing(this.aura);
 		this.game.add.existing(this);
-		window.x = this;
+		window.x = this;	//debug
 	}
 	
 	Hero.HIT_POINTS = 10;
@@ -54,6 +52,7 @@ define(function(require) {
 	Hero.THRUST = 3000;
 	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
+	Hero.STARTING_POWER = 1000;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -63,7 +62,8 @@ define(function(require) {
 	_.extend(Hero.prototype, damageComponent(Hero.HIT_POINTS), {
 		constructor: Hero,
 		update: function(game) {
-			if(this.controls.dash.isDown) {
+			if(this.controls.dash.isDown && this.power > 0) {
+				this.power--;	// TODO interpolate
 				this.poweredUp = true;
 				this.stunned = false;
 			} else {

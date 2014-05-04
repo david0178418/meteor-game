@@ -5,6 +5,7 @@ define(function(require) {
 		MeteorController = require('entities/meteor-controller'),
 		Hero = require('entities/hero'),
 		BuildingController = require('entities/building-controller'),
+		Hud = require('entities/hud'),
 		game = require('game');
 	
 	States.Play = 'play';
@@ -14,6 +15,7 @@ define(function(require) {
 			Hero.preload(game);
 			BuildingController.preload(game);
 			MeteorController.preload(game);
+			Hud.preload(game);
 		},
 		create: function(game) {
 			game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -33,6 +35,7 @@ define(function(require) {
 			this.meteorController = new MeteorController(game);
 			this.buildingController = new BuildingController(game);
 			this.hero = new Hero(game);
+			this.hud = new Hud(game, this.hero);
 			game.add.existing(this.hero);
 			game.stage.backgroundColor = '#333';
 		},
@@ -45,6 +48,7 @@ define(function(require) {
 
 			this.hero.update(game);
 			this.meteorController.update(game);
+			this.hud.update(game);
 		},
 		paused: function() {
 		},
@@ -58,9 +62,7 @@ define(function(require) {
 			if(hero.poweredUp) {
 				meteor.kill();
 				return;
-			}
-			
-			
+			}		
 			
 			hero.stun();
 			meteorTouching = meteor.body.touching;
