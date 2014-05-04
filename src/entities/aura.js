@@ -10,13 +10,14 @@ define(function(require) {
 		this.makeParticles('aura');
 		this.setRotation(0, 0);
 		this.setAlpha(1, 0, Aura.LIFE_SPAN);
-		this.setScale(1, 0, 1, 0, Aura.LIFE_SPAN, Phaser.Easing.Cubic.In);
+		this.setScale(1, 0, 1, 0, Aura.LIFE_SPAN);
 		this.minParticleSpeed.set(0, 0);
 		this.maxParticleSpeed.set(0, 0);
 	}
 	
 	Aura.LIFE_SPAN = 700;
 	Aura.preload = function(game) {
+		game.load.image('aura', 'assets/images/aura.png');
 	};
 	
 	Aura.prototype = Object.create(Phaser.Particles.Arcade.Emitter.prototype);

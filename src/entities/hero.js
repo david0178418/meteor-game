@@ -72,7 +72,8 @@ define(function(require) {
 				this.aura.flareUp(this.x, this.y);
 			}
 			
-			this.aura.gravity = -Hero.MAX_VELOCITY * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
+			//this.aura.gravity = -Hero.MAX_VELOCITY * ( (Hero.DASH_VELOCITY - Math.abs(this.velocity.x)) / Hero.DASH_VELOCITY);
+			this.aura.gravity = 0;
 		},
 		userDash: function() {
 			var velocity = this.velocity,
