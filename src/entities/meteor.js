@@ -16,7 +16,8 @@ define(function(require) {
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds=false;
 		this.body.allowGravity = true;
-		
+		this.body.gravity.y = 150;
+		this.body.drag.x = this.body.drag.y = 100;
 		this.startFall(props);
 	}
 	
@@ -37,7 +38,7 @@ define(function(require) {
 		},
 		startFall: function(props) {
 			this.reset(props.x, Meteor.SPAWN_HEIGHT);
-			this.body.velocity.y = props.speed;
+			//this.body.velocity.y = props.speed;
 			this.hitPoints = Meteor.TOUGHNESS;
 		}
 	});

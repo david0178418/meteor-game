@@ -37,10 +37,13 @@ define(function(require) {
 			game.stage.backgroundColor = '#333';
 		},
 		update: function(game) {
-			game.physics.arcade.collide(this.hero.aura, this.meteorController.meteors, null, this.collideHeroAuraMeteor, this);
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
 			
 			game.physics.arcade.collide(this.meteorController.meteors, this.buildingController.cities, this.collideBuildingMeteor, null, this);
+			game.physics.arcade.collide(this.meteorController.meteors, this.meteorController.meteors, function(meteorA, meteorB) {
+				meteorA.kill();
+				meteorB.kill();
+			}, null, this);
 			
 			this.game.physics.arcade.collide(this.hero, this.buildingController.cities);
 
@@ -56,13 +59,33 @@ define(function(require) {
 			if(meteor.isDead()) {
 				meteor.kill();
 			}
+			
 			return false; //use as process if intersecting to prevent physics interaction
 		},
 		collideHeroMeteor: function(hero, meteor) {
-			meteor.kill();
+			var meteorTouching = meteor.body.touching;
 			
-			hero.stun();
-			hero.velocity.y = 500;
+			
+			if(meteorTouching.right) {
+				meteor.body.velocity.x = -300;
+				meteor.body.velocity.y = -100;
+				
+				hero.stun();
+				hero.velocity.x = 300;
+			} else if(meteorTouching.left) {
+				meteor.body.velocity.x = 300;
+				meteor.body.velocity.y = -100;
+				
+				hero.stun();
+				hero.velocity.x = -300;
+			} else {
+				meteor.kill();
+				
+				if(meteorTouching.down) {
+					hero.stun();
+					hero.velocity.y = 500;
+				}
+			}
 		},
 		collideBuildingMeteor: function(meteor, building) {
 			meteor.kill();

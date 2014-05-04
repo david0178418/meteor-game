@@ -24,7 +24,8 @@ define(function(require) {
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 		this.body.allowRotation = false;
 		this.body.collideWorldBounds = true;
-		this.body.gravity.y = 400;
+		//this.body.gravity.y = 400;
+		this.body.allowGravity = false;
 		
 		this.body.drag = new Phaser.Point(Hero.DRAG, Hero.DRAG);
 		
@@ -50,10 +51,10 @@ define(function(require) {
 	}
 	
 	Hero.HIT_POINTS = 10;
-	Hero.MAX_VELOCITY = 200;
+	Hero.MAX_VELOCITY = 300;
 	Hero.DRAG = 300;
-	Hero.THRUST = 600;
-	Hero.DASH_VELOCITY = 350;
+	Hero.THRUST = 800;
+	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
 
 	Hero.preload = function(game) {
@@ -104,6 +105,9 @@ define(function(require) {
 			if(vx || vy) {
 				velocity.x = vx;
 				velocity.y = vy;
+				this.body.drag.x = this.body.drag.y = 0;
+			} else {
+				this.body.drag.x = this.body.drag.y = Hero.DRAG;
 			}
 		},
 		userFly: function() {
@@ -113,7 +117,7 @@ define(function(require) {
 				thrust = Hero.THRUST,
 				maxVelocity = Hero.MAX_VELOCITY;
 			
-			this.body.allowGravity = true;
+			//this.body.allowGravity = true;
 
 			if(!this.stunned && this.poweredUp) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {

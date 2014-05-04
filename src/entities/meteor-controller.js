@@ -7,7 +7,7 @@ define(function(require) {
 	function MeteorController(game) {
 		this.game = game;
 		this.meteors = game.add.group();
-		this.baseInterval = 1000;
+		this.baseInterval = 2000;
 		this.intervalRange = 2000;
 		this.nextSpawn = 3000;
 		this.meteorSpeed = 150;
