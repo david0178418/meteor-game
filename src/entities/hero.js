@@ -24,9 +24,11 @@ define(function(require) {
 		this.poweredUp = false;
 		this.stunned = false;
 		this.power = Hero.STARTING_POWER;
+		this.powerCapacity = Hero.STARTING_POWER;
+		this.powerRegenRate = Hero.STARTING_POWER_REGEN_RATE;
+		this.powerDrainRate = Hero.STARTING_POWER_DRAIN_RATE;
 		this.aura = new Aura(game);
 		this.addChild(this.aura);
-		
 		
 		game.physics.enable(this, Phaser.Physics.ARCADE);
 		this.body.allowRotation = false;
@@ -53,8 +55,8 @@ define(function(require) {
 	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
 	Hero.STARTING_POWER = 1000;
-	Hero.POWER_REGEN_RATE = 100;
-	Hero.POWER_DRAIN_RATE = 500;
+	Hero.STARTING_POWER_REGEN_RATE = 200;
+	Hero.STARTING_POWER_DRAIN_RATE = 500;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -67,7 +69,7 @@ define(function(require) {
 			var secondsDelta = this.game.time.elapsed / 1000;
 			
 			if(this.controls.dash.isDown && this.power > 0) {
-				this.power -= (Hero.POWER_DRAIN_RATE * secondsDelta) | 0;
+				this.power -= (this.powerDrainRate * secondsDelta) | 0;
 				this.poweredUp = true;
 				this.stunned = false;
 				
@@ -80,9 +82,9 @@ define(function(require) {
 					this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
 				} else {
 					if(!this.controls.dash.isDown) {	//TODO Clean this nested mess
-						this.power += (Hero.POWER_REGEN_RATE * secondsDelta) | 0;
-						if(this.power > Hero.STARTING_POWER) {
-							this.power = Hero.STARTING_POWER;
+						this.power += (this.powerRegenRate * secondsDelta) | 0;
+						if(this.power > this.powerCapacity) {
+							this.power = this.powerCapacity;
 						}
 					}
 				}
