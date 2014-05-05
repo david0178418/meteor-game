@@ -46,7 +46,7 @@ define(function(require) {
 			
 			this.game.physics.arcade.collide(this.hero, this.buildingController.cities);
 
-			this.hero.update(game);
+			//this.hero.update(game);	??Why is this updating
 			this.meteorController.update(game);
 			this.hud.update(game);
 		},
@@ -61,6 +61,7 @@ define(function(require) {
 			
 			if(hero.poweredUp) {
 				meteor.kill();
+				hero.stop();
 				return;
 			}		
 			

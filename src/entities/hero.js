@@ -53,6 +53,8 @@ define(function(require) {
 	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
 	Hero.STARTING_POWER = 1000;
+	Hero.POWER_REGEN_RATE = 100;
+	Hero.POWER_DRAIN_RATE = 500;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -61,15 +63,28 @@ define(function(require) {
 	Hero.prototype = Object.create(Phaser.Sprite.prototype);
 	_.extend(Hero.prototype, damageComponent(Hero.HIT_POINTS), {
 		constructor: Hero,
-		update: function(game) {
+		update: function() {
+			var secondsDelta = this.game.time.elapsed / 1000;
+			
 			if(this.controls.dash.isDown && this.power > 0) {
-				this.power--;	// TODO interpolate
+				this.power -= (Hero.POWER_DRAIN_RATE * secondsDelta) | 0;
 				this.poweredUp = true;
 				this.stunned = false;
+				
+				if(this.power < 0) {
+					this.power = 0;
+				}
 			} else {
 				this.poweredUp = false;
 				if(this.stunned) {
 					this.stunned = this.game.time.now < this.stunnedTime + Hero.STUN_TIME;
+				} else {
+					if(!this.controls.dash.isDown) {	//TODO Clean this nested mess
+						this.power += (Hero.POWER_REGEN_RATE * secondsDelta) | 0;
+						if(this.power > Hero.STARTING_POWER) {
+							this.power = Hero.STARTING_POWER;
+						}
+					}
 				}
 			}
 			
@@ -115,7 +130,7 @@ define(function(require) {
 				acceleration = this.acceleration,
 				controls = this.controls,
 				thrust = Hero.THRUST,
-				maxVelocity = this.controls.dash.isDown ? Hero.MAX_DASH_VELOCITY : Hero.MAX_VELOCITY;
+				maxVelocity = this.poweredUp ? Hero.MAX_DASH_VELOCITY : Hero.MAX_VELOCITY;
 			
 			if(!this.stunned) {
 				if (controls.up.isDown && velocity.y >= -maxVelocity) {
@@ -138,6 +153,9 @@ define(function(require) {
 		stun: function() {
 			this.stunned = true;
 			this.stunnedTime = this.game.time.now;
+			this.stop();
+		},
+		stop: function() {
 			this.acceleration.x = this.acceleration.y = 0;
 			this.velocity.x = this.velocity.y = 0;
 		}
