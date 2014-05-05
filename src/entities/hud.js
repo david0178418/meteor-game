@@ -23,7 +23,7 @@ define(function(require) {
 	}
 
 	Hud.prototype = {
-		update: function(game) {
+		update: function() {
 			var hero = this.hero;
 			
 			if(this.currentHealth !== hero.hitPoints) {

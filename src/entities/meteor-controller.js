@@ -15,11 +15,11 @@ define(function(require) {
 	}
 
 	MeteorController.prototype = {
-		update: function(game) {
-			this.nextSpawn -= game.time.elapsed;
+		update: function() {
+			this.nextSpawn -= this.game.time.elapsed;
 
 			if(this.nextSpawn < 0) {
-				this.spawnMeteor(game);
+				this.spawnMeteor(this.game);
 
 				this.nextSpawn = this.baseInterval + _.random(this.intervalRange);
 			}

@@ -25,7 +25,7 @@ define(function(require) {
 	
 	_.extend(Building.prototype, damageComponent(Building.HIT_POINTS), {
 		constructor: Building,
-		update: function(game) {
+		update: function() {
 			if(!this.hitPoints) {
 				this.kill();
 				return;
