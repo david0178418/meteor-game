@@ -55,8 +55,8 @@ define(function(require) {
 	Hero.DASH_VELOCITY = 300;
 	Hero.STUN_TIME = 700;
 	Hero.STARTING_POWER = 1000;
-	Hero.STARTING_POWER_REGEN_RATE = 200;
-	Hero.STARTING_POWER_DRAIN_RATE = 500;
+	Hero.STARTING_POWER_REGEN_RATE = 250;
+	Hero.STARTING_POWER_DRAIN_RATE = 400;
 
 	Hero.preload = function(game) {
 		Aura.preload(game);
@@ -90,9 +90,12 @@ define(function(require) {
 				}
 			}
 			
+			if(this.poweredUp) {
+				this.aura.flareUp(this.x, this.y);
+			}
+			
 			if(!this.stunned) {
 				this.userFly();
-				this.aura.flareUp(this.x, this.y);
 			}
 		},
 		userDash: function() {
