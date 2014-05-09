@@ -6,7 +6,7 @@ define(function(require) {
 		damageComponent = require('components/damage');
 	
 	function Hero(game) {
-		Phaser.Sprite.call(this, game, 100, 300, 'hero-ground');
+		Phaser.Sprite.call(this, game, 200, 300, 'hero-ground');
 		// XXX TEMP SIZE FOR PLACEHOLDER
 		this.width = 16;
 		this.height = 16;

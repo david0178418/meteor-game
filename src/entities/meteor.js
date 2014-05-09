@@ -33,7 +33,7 @@ define(function(require) {
 	_.extend(Meteor.prototype, damageComponent(Meteor.TOUGHNESS), {
 		constructor: Meteor,
 		update: function() {
-			if(this.y > this.game.height) {
+			if(this.y > this.game.world.height) {
 				this.kill();
 			}
 		},

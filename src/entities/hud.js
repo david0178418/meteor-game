@@ -19,6 +19,9 @@ define(function(require) {
 			align: 'left'
 		});
 		
+		this.healthMsg.fixedToCamera = true;
+		this.powerMsg.fixedToCamera = true;
+		
 		window.y = this;	//debug
 	}
 

@@ -9,17 +9,17 @@ define(function(require) {
 		this.cities = game.add.group();
 		this.cities.add(new Building({
 			x: 100,
-			y: game.height
+			y: game.world.height
 		}, game));
 		
 		this.cities.add(new Building({
-			x: game.width / 2,
-			y: game.height
+			x: game.world.width / 2,
+			y: game.world.height
 		}, game));
 		
 		this.cities.add(new Building({
-			x: game.width - 100,
-			y: game.height
+			x: game.world.width - 100,
+			y: game.world.height
 		}, game));
 	}
 

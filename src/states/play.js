@@ -1,6 +1,7 @@
 define(function(require) {
 	"use strict";
-	var Phaser = require('phaser'),
+	var CONFIG = require('config'),
+		Phaser = require('phaser'),
 		States = require('states'),
 		MeteorController = require('entities/meteor-controller'),
 		Hero = require('entities/hero'),
@@ -30,7 +31,7 @@ define(function(require) {
 				game.scale.refresh();
 			});
 
-			game.world.setBounds(0, 0, game.width, game.height);
+			game.world.setBounds(0, 0, CONFIG.stage.width, CONFIG.stage.height);
 			
 			this.meteorController = new MeteorController(game);
 			this.buildingController = new BuildingController(game);
@@ -38,6 +39,8 @@ define(function(require) {
 			this.hud = new Hud(game, this.hero);
 			game.add.existing(this.hero);
 			game.stage.backgroundColor = '#333';
+			
+			game.camera.follow(this.hero);
 		},
 		update: function(game) {
 			game.physics.arcade.collide(this.hero, this.meteorController.meteors, this.collideHeroMeteor, null, this);
